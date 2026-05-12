@@ -1,0 +1,239 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF; /* Lighter shade of gray */
+    color: #333333; /* Dark text */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    width: 95%;
+    max-width: 600px; /* Narrower column */
+    margin: 40px auto;
+    padding: 20px;
+}
+
+
+
+/* Header and Navigation Bar */
+.header-nav {
+    display: flex; /* Align nav and header horizontally */
+    align-items: flex-start; /* Align items to the top */
+    margin-bottom: 20px;
+}
+
+nav {
+    margin-right: 20px; /* Space between nav and header */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin-bottom: -2px; /* Space between nav items */
+}
+
+nav ul li a {
+    color: #6b6b6b; /* Light gray color for hyperlinks */
+    text-decoration: none; /* Remove underline */
+    font-size: 0.9em; /* Reduced font size */
+}
+
+nav ul li a:hover {
+    color: #555555; /* Slightly darker gray on hover */
+}
+
+header {
+    flex: 1; /* Take up remaining space */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8em; /* Reduced font size */
+    color: #333333; /* Dark text */
+}
+
+header p {
+    margin: 5px 0 0;
+    font-size: 1em; /* Reduced font size */
+    color: #555555; /* Slightly lighter text */
+}
+
+section {
+    margin-bottom: 30px; /* Reduced margin */
+}
+
+section h2 {
+    font-size: 1.5em; /* Reduced font size */
+    margin-bottom: 10px;
+    color: #333333; /* Dark text */
+}
+
+section p {
+    font-size: 0.9em; /* Reduced font size */
+    color: #555555; /* Slightly lighter text */
+}
+
+.blog-figure-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 18px 0;
+}
+
+.blog-figure {
+    margin: 0;
+}
+
+.blog-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.blog-figure figcaption {
+    margin-top: 8px;
+    font-size: 0.78em;
+    color: #777777;
+    text-align: center;
+}
+
+#publications-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#publications-list li {
+    margin: 15px 0; /* Reduced vertical space between papers */
+}
+
+.paper-title {
+    font-size: 0.9em;
+    font-weight: 700; /* Bold title */
+    color: #333333; /* Darkest gray for title */
+    margin-bottom: 2px; /* Reduced margin */
+    line-height: 1.2; /* Tighter line height */
+}
+
+.paper-authors {
+    font-size: 0.8em;
+    color: #555555; /* Medium gray for authors */
+    margin-bottom: 2px; /* Reduced margin */
+    line-height: 1.2; /* Tighter line height */
+}
+
+.paper-venue {
+    font-size: 0.8em;
+    color: #777777; /* Light gray for venue */
+    margin-bottom: 3px; /* Reduced margin */
+    line-height: 1.2; /* Tighter line height */
+}
+
+.paper-links a {
+    margin-right: 10px; /* Space between links */
+    line-height: 1.2; /* Tighter line height */
+    font-size: 0.8em;
+}
+
+#news-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#news-list li {
+    margin: 10px 0; /* Reduced vertical space between news items */
+    font-size: 0.95em;
+    color: #555555; /* Medium gray for news text */
+    line-height: 1.4; /* Slightly tighter line height */
+}
+
+.news-date {
+    font-weight: 500; /* Slightly bold for the date */
+    color: #333333; /* Darker gray for the date */
+    font-weight: bold;
+}
+
+a:visited {
+  color: #acb0b0;
+}
+
+a:link {
+  color: #6b6b6b;
+}
+
+footer {
+    text-align: left; /* Align footer content to the left */
+    margin-top: 40px;
+    font-size: 0.8em; /* Reduced font size */
+    color: #777777; /* Light grey text */
+}
+#see-more {
+    color: #777777; /* Light gray color */
+    text-decoration: underline; /* Underline */
+    text-decoration-thickness: 0.5px; /* Fine underline */
+    text-decoration-style: dotted; /* Dotted underline */
+    text-underline-offset: 2px; /* Space between text and underline */
+    font-size: 0.9em; /* Reduced font size */
+    cursor: pointer; /* Change cursor to pointer */
+    display: none; /* Hidden by default */
+}
+
+#see-more:hover {
+    color: #555555; /* Slightly darker gray on hover */
+}
+
+.load-more {
+    color: #777777; /* Light gray color */
+    text-decoration: underline; /* Underline */
+    text-decoration-thickness: 0.5px; /* Fine underline */
+    text-decoration-style: dotted; /* Dotted underline */
+    text-underline-offset: 2px; /* Space between text and underline */
+    font-size: 0.9em; /* Reduced font size */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+.load-more:hover {
+    color: #555555; /* Slightly darker gray on hover */
+}
+
+/* Horizontal Navbar for Social Links */
+.social-navbar {
+    margin-bottom: 20px; /* Space below the navbar */
+}
+
+.social-navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Make the list horizontal */
+    gap: 15px; /* Space between items */
+}
+
+.social-navbar ul li {
+    margin: 0; /* Remove default margin */
+}
+
+.social-navbar ul li a {
+    color: #777777; /* Light gray color for hyperlinks */
+    text-decoration: none; /* Remove underline */
+    font-size: 0.9em; /* Reduced font size */
+}
+
+.social-navbar ul li a:hover {
+    color: #555555; /* Slightly darker gray on hover */
+}
+
+.social-navbar ul li:not(:last-child)::after {
+    content: "•"; /* Add a dot */
+    position: absolute;
+    right: -10px; /* Adjust the position of the dot */
+}

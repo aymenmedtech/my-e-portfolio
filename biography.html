@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aymen Saad's Homepage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/styles.css">
+</head>
+<body>
+    <div class="container biography-container">
+        <!-- Header and Navigation Bar -->
+        <div class="header-nav">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="biography.html">Bio</a></li>
+                </ul>
+            </nav>         
+            <header>
+                <h1>Biography</h1>
+        <!-- Horizontal Navbar for Social Links -->
+        <div class="social-navbar">
+            <ul>
+                <li><a href="https://github.com/aymenmedtech" target="_blank">GitHub</a></li>
+                <li><a href="https://www.linkedin.com/in/Aymen-Saad/" target="_blank">LinkedIn</a></li>
+            </ul>
+        </div>
+            </header>
+        </div>
+
+                <!-- Main Content -->
+        <section id="bio">
+            <p id="biography-text"></p>
+        </section>
+
+
+        <footer>
+            <p>2026 - Aymen Saad.</p>
+        </footer>
+    </div>
+
+    <script>
+        async function loadBiography() {
+            const paragraphElement = document.getElementById('biography-text');
+
+            try {
+                const response = await fetch('./biography.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load biography content');
+                }
+
+                const data = await response.json();
+                paragraphElement.textContent = data.paragraph || '';
+            } catch (error) {
+                paragraphElement.textContent = "I'm Aymen Saad, a Computer Systems Engineering student at the Mediterranean Institute, with a passion for control systems, robotics, automation, and navigation.";
+            }
+        }
+
+        loadBiography();
+    </script>
+</body>
+</html>

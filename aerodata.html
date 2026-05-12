@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aerodata Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Aerodata</h1>
+            <p><a href="index.html">← Back to homepage</a></p>
+        </header>
+
+        <section id="blog-content">
+            <!-- Blog content will be loaded from aerodata-blog.json -->
+        </section>
+    </div>
+
+    <script>
+        function appendTextParagraph(container, text) {
+            const cleanedText = text.trim();
+
+            if (!cleanedText) {
+                return;
+            }
+
+            const paragraph = document.createElement('p');
+            paragraph.textContent = cleanedText;
+            container.appendChild(paragraph);
+        }
+
+        function buildFigureGrid(imagePaths, captions) {
+            const figureGrid = document.createElement('div');
+            figureGrid.className = 'blog-figure-grid';
+
+            imagePaths.forEach((imagePath, index) => {
+                const figure = document.createElement('figure');
+                figure.className = 'blog-figure';
+
+                const image = document.createElement('img');
+                image.src = imagePath;
+                image.alt = captions[index] || `Aerodata image ${index + 1}`;
+
+                figure.appendChild(image);
+
+                if (captions[index]) {
+                    const caption = document.createElement('figcaption');
+                    caption.textContent = captions[index];
+                    figure.appendChild(caption);
+                }
+
+                figureGrid.appendChild(figure);
+            });
+
+            return figureGrid;
+        }
+
+        function renderStructuredText(container, text) {
+            const markerPattern = /\[(IMAGE|CAPTION)\](.*?)\[\/\1\]/g;
+            let lastIndex = 0;
+            let match;
+            const pendingImages = [];
+            const pendingCaptions = [];
+
+            function flushFigures() {
+                if (pendingImages.length === 0) {
+                    return;
+                }
+
+                container.appendChild(buildFigureGrid(pendingImages.splice(0), pendingCaptions.splice(0)));
+            }
+
+            while ((match = markerPattern.exec(text)) !== null) {
+                const precedingText = text.slice(lastIndex, match.index);
+                if (precedingText.trim()) {
+                    flushFigures();
+                    appendTextParagraph(container, precedingText);
+                }
+
+                if (match[1] === 'IMAGE') {
+                    pendingImages.push(match[2]);
+                } else {
+                    pendingCaptions.push(match[2]);
+                }
+
+                lastIndex = markerPattern.lastIndex;
+            }
+
+            const trailingText = text.slice(lastIndex);
+            flushFigures();
+
+            if (trailingText.trim()) {
+                appendTextParagraph(container, trailingText);
+            }
+        }
+
+        async function loadBlog() {
+            try {
+                const res = await fetch('./aerodata-blog.json');
+                const data = await res.json();
+                const blog = data.vlog;
+
+                const container = document.getElementById('blog-content');
+                const fragments = Object.entries(blog).map(([heading, text]) => {
+                    const formattedHeading = heading.replace(/([A-Z])/g, ' $1').trim();
+                    const section = document.createElement('section');
+
+                    const headingElement = document.createElement('h2');
+                    headingElement.textContent = formattedHeading;
+                    section.appendChild(headingElement);
+
+                    renderStructuredText(section, text);
+
+                    return section;
+                });
+
+                container.replaceChildren(...fragments);
+            } catch (err) {
+                console.error('Failed to load blog:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadBlog);
+    </script>
+</body>
+</html>

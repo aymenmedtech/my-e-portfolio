@@ -22,15 +22,43 @@
 
     <script>
         function appendTextParagraph(container, text) {
-            const cleanedText = text.trim();
+            const subtitlePattern = /^(?:###\s+\*\*)?(MCU: Arduino Nano → STM32 Nucleo-F411RE:|IMU: MPU6050 → BMI270:|Positioning: GPS \(GY-NEO6MV2\) → GNSS \(MAX-M10S\):|Magnetometer: none → IIS2MDC:|Barometer: BMP280 → BMP581:|Radio: NRF24L01 → SX1262 \(E22-900M22S\):)(?:\*\*)?$/;
+            let paragraphLines = [];
 
-            if (!cleanedText) {
-                return;
+            function flushParagraph() {
+                if (paragraphLines.length === 0) {
+                    return;
+                }
+
+                const paragraph = document.createElement('p');
+                paragraph.textContent = paragraphLines.join(' ');
+                container.appendChild(paragraph);
+                paragraphLines = [];
             }
 
-            const paragraph = document.createElement('p');
-            paragraph.textContent = cleanedText;
-            container.appendChild(paragraph);
+            text.split('\n').forEach((line) => {
+                const cleanedLine = line.trim();
+
+                if (!cleanedLine) {
+                    flushParagraph();
+                    return;
+                }
+
+                const subtitleMatch = cleanedLine.match(subtitlePattern);
+                if (subtitleMatch) {
+                    flushParagraph();
+                    const subtitle = document.createElement('h3');
+                    const boldText = document.createElement('strong');
+                    boldText.textContent = subtitleMatch[1];
+                    subtitle.appendChild(boldText);
+                    container.appendChild(subtitle);
+                    return;
+                }
+
+                paragraphLines.push(cleanedLine);
+            });
+
+            flushParagraph();
         }
 
         function buildFigureGrid(imagePaths, captions) {

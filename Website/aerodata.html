@@ -22,7 +22,7 @@
 
     <script>
         function appendTextParagraph(container, text) {
-            const subtitlePattern = /^(MCU: Arduino Nano → STM32 Nucleo-F411RE:|IMU: MPU6050 → BMI270:|Positioning: GPS \(GY-NEO6MV2\) → GNSS \(MAX-M10S\):|Magnetometer: none → IIS2MDC:|Barometer: BMP280 → BMP581:|Radio: NRF24L01 → SX1262 \(E22-900M22S\):)$/;
+            const subtitlePattern = /^(?:###\s+\*\*)?(MCU: Arduino Nano → STM32 Nucleo-F411RE:|IMU: MPU6050 → BMI270:|Positioning: GPS \(GY-NEO6MV2\) → GNSS \(MAX-M10S\):|Magnetometer: none → IIS2MDC:|Barometer: BMP280 → BMP581:|Radio: NRF24L01 → SX1262 \(E22-900M22S\):)(?:\*\*)?$/;
             let paragraphLines = [];
 
             function flushParagraph() {
@@ -44,11 +44,12 @@
                     return;
                 }
 
-                if (subtitlePattern.test(cleanedLine)) {
+                const subtitleMatch = cleanedLine.match(subtitlePattern);
+                if (subtitleMatch) {
                     flushParagraph();
                     const subtitle = document.createElement('h3');
                     const boldText = document.createElement('strong');
-                    boldText.textContent = cleanedLine;
+                    boldText.textContent = subtitleMatch[1];
                     subtitle.appendChild(boldText);
                     container.appendChild(subtitle);
                     return;

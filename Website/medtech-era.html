@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medtech ERA Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Medtech ERA</h1>
+            <p><a href="index.html">← Back to homepage</a></p>
+        </header>
+
+        <section id="blog-content">
+            <!-- Blog content will be loaded from medtech-era-blog.json -->
+        </section>
+    </div>
+
+    <script>
+        async function loadBlog() {
+            try {
+                const res = await fetch('./medtech-era-blog.json');
+                const data = await res.json();
+                const blog = data.vlog;
+
+                const container = document.getElementById('blog-content');
+                const html = Object.entries(blog).map(([heading, content]) => {
+                    const formattedHeading = heading.replace(/([A-Z])/g, ' $1').trim();
+                    
+                    let section = '';
+                    
+                    // Extract leading images (with or without captions)
+                    let leadingImagesHtml = '';
+                    let processedContent = content;
+                    let leadingMatch;
+                    
+                    // Check if content starts with images (with or without caption)
+                    while ((leadingMatch = /^\[IMAGE\]([^\[]+)\[\/IMAGE\](?:\[CAPTION\]([^\[]+)\[\/CAPTION\])?/.exec(processedContent)) !== null) {
+                        const imagePath = leadingMatch[1];
+                        const caption = leadingMatch[2];
+                        
+                        leadingImagesHtml += `<img src="${imagePath}" alt="${formattedHeading}" style="max-width:100%; height:auto; margin:10px 0;">`;
+                        if (caption) {
+                            leadingImagesHtml += `<p style="font-style: italic; font-size: 0.9em; text-align: center; margin:5px 0 10px 0;">${caption}</p>`;
+                        }
+                        
+                        // Remove the processed image tags from content
+                        processedContent = processedContent.substring(leadingMatch[0].length);
+                    }
+                    
+                    // Add leading images before heading
+                    if (leadingImagesHtml) {
+                        section += leadingImagesHtml;
+                    }
+                    
+                    // Add heading after leading images
+                    section += `<h2>${formattedHeading}</h2>`;
+                    
+                    // Handle remaining inline image groups (1+ images followed by 0+ captions)
+                    processedContent = processedContent.replace(/((?:\[IMAGE\][^\[]+\[\/IMAGE\])+)((?:\[CAPTION\][^\[]+\[\/CAPTION\])*)/g, (match, imagesPart, captionsPart) => {
+                        const imageMatches = imagesPart.match(/\[IMAGE\]([^\[]+)\[\/IMAGE\]/g) || [];
+                        const captionMatches = captionsPart ? (captionsPart.match(/\[CAPTION\]([^\[]+)\[\/CAPTION\]/g) || []) : [];
+                        const images = imageMatches.map(m => m.match(/\[IMAGE\]([^\[]+)\[\/IMAGE\]/)[1]);
+                        const captions = captionMatches.map(m => m.match(/\[CAPTION\]([^\[]+)\[\/CAPTION\]/)[1]);
+
+                        if (images.length === 0) {
+                            return match;
+                        }
+
+                        const isThreeFigureRow = images.length === 3;
+                        const imageStyle = isThreeFigureRow
+                            ? `width:100%; height:190px; object-fit:contain; object-position:center; display:block; margin:0 0 6px 0; background:#fff;`
+                            : `width:100%; aspect-ratio: 4 / 3; object-fit:contain; display:block; margin:0 0 6px 0;`;
+
+                        let gallery = isThreeFigureRow
+                            ? `</p><div style="display:grid; grid-template-columns:repeat(3, 1fr); width:100%; gap:12px; margin:10px 0;">`
+                            : `</p><div style="display:flex; width:100%; gap:12px; margin:10px 0;">`;
+                        images.forEach((img, idx) => {
+                            gallery += `<div style="flex:1 1 0; min-width:0;">`;
+                            gallery += `<img src="${img}" alt="${formattedHeading}" style="${imageStyle}">`;
+                            if (captions[idx]) {
+                                gallery += `<p style="font-style: italic; font-size: 0.9em; text-align: center; margin:0;">${captions[idx]}</p>`;
+                            }
+                            gallery += `</div>`;
+                        });
+                        gallery += `</div><p>`;
+                        return gallery;
+                    });
+                    
+                    if (processedContent) {
+                        section += `<p>${processedContent}</p>`;
+                    }
+                    return section;
+                }).join('');
+
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Failed to load blog:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadBlog);
+    </script>
+</body>
+</html>

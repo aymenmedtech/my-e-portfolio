@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forward and Inverse Kinematics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/styles.css">
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['$$', '$$']]
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Forward and Inverse Kinematics</h1>
+            <p><a href="index.html">← Back to homepage</a></p>
+        </header>
+
+        <section>
+            <h2>Why I'm Writing This</h2>
+            <p>A few months ago, I sat down to learn forward and inverse kinematics separately, two concepts I kept hearing mentioned in robotics labs and research papers. What surprised me most? They're not scary at all. In fact, once you get the intuition right, they're just two different ways of asking the same question. Let me share what clicked for me, because I remember when none of it made sense.</p>
+        </section>
+
+        <section>
+            <h2>Let's Start with Your Arm</h2>
+            <p>Forget robots for a second. Right now, you're reading this. Your brain knows where your hand should be on the screen, and somehow your shoulder, elbow, and wrist work together to put your finger there. That's the magic we're talking about.</p>
+            <p>Forward kinematics is: "I know how much each of my joints is bent. What position is my hand in?"</p>
+            <p>Inverse kinematics is: "I want my hand at this position. How much should each joint bend?"</p>
+            <p>Your brain does both of these automatically, thousands of times a day. We're just teaching robots to do the same thing.</p>
+        </section>
+
+        <section>
+            <h2>Forward Kinematics: Tracing the Chain</h2>
+            <p>Let's use a simple example: a robotic arm with three joints, like an elbow with extra flexibility.</p>
+            <p>Imagine your arm is like a chain:</p>
+            <p>Your shoulder is at position \((0, 0)\)</p>
+            <p>Your upper arm is 1 meter long, and it's rotated 45 degrees</p>
+            <p>Your forearm is 1 meter long, and it's rotated another 30 degrees from the upper arm</p>
+            <p>Your wrist is 0.5 meters, and it's rotated another 15 degrees</p>
+            <p>Forward kinematics asks: "Where is the tip of my hand?"</p>
+            <p>This is actually pretty straightforward. You trace through each joint, one by one:</p>
+            <p>Start at the shoulder.</p>
+            <p>Go 1 meter in the direction of the first rotation \((45^\circ)\).</p>
+            <p>From that point, go 1 meter in the direction of the second rotation \((45^\circ + 30^\circ)\).</p>
+            <p>From that point, go 0.5 meters in the direction of the third rotation \((45^\circ + 30^\circ + 15^\circ)\).</p>
+            <p>Done. That's where your hand is.</p>
+            <p>The math is basically: combine all the rotations and distances using trigonometry. Nothing fancy, just:</p>
+            <p>$$x = L_1 \cos(\theta_1) + L_2 \cos(\theta_1 + \theta_2) + L_3 \cos(\theta_1 + \theta_2 + \theta_3)$$</p>
+            <p>$$y = L_1 \sin(\theta_1) + L_2 \sin(\theta_1 + \theta_2) + L_3 \sin(\theta_1 + \theta_2 + \theta_3)$$</p>
+            <p>Where \(L\) is the link length and \(\theta\) is the rotation angle.</p>
+            <p>This matters because forward kinematics is fast and always has one answer. If you tell me the angles, I can always tell you the hand position. It's deterministic, no surprises.</p>
+        </section>
+
+        <section>
+            <h2>Inverse Kinematics: The Puzzle</h2>
+            <p>Now flip the problem around.</p>
+            <p>You want your robotic hand to touch a specific point in space, such as \((2.5, 1.8)\). What angles should each joint have?</p>
+            <p>This is way trickier. You're working backwards. You have to solve the equation, and here's the annoying part: there might be multiple answers, one answer, or no answer at all.</p>
+            <p>Think about it: I ask you to put your hand at a specific point on the wall. You could do it with your elbow bent a lot and your shoulder bent a little, or with your elbow bent less and your shoulder bent more. Both work. Your brain picks one, usually the comfortable one. A robot has to decide too.</p>
+            <p>Why it's hard:</p>
+            <p>Multiple solutions exist. Your arm has redundancy, meaning multiple joint configurations can lead to the same end position. This is great in real life, but it's a nightmare for math.</p>
+            <p>Some positions are unreachable. If I ask your hand to touch a point 5 meters away, and your arm is only 2.5 meters long, it won't work.</p>
+            <p>It's computationally expensive. There's no clean, fast formula like forward kinematics. You often need iterative methods, which are basically guess, check, adjust, repeat.</p>
+            <p>The reality check: inverse kinematics is usually solved one of three ways.</p>
+            <p>Numerical methods, which are trial and error with smart guessing.</p>
+            <p>Analytical solutions, which are derived special equations and only work for simple robot arms.</p>
+            <p>Machine learning, where a neural network learns the mapping. This is newer, trendy, and sometimes overkill.</p>
+            <p>Here's what made this click for me: these two concepts are inverses of each other.</p>
+            <p>Forward kinematics: angles → position.</p>
+            <p>Inverse kinematics: position → angles.</p>
+            <p>One is asking, "What's the result?" and the other is asking, "How do I get this result?"</p>
+            <p>When I was learning them separately, they felt like two different subjects. But they're not. They're two sides of the same coin. Forward kinematics is the easier direction. Inverse kinematics is asking: "Can I solve it backwards?" And most of the time, the answer is "kind of, but it's messy."</p>
+            <p>A quick reachability check is useful before solving:</p>
+            <p>$$\sqrt{x^2 + y^2} \leq L_1 + L_2 + L_3$$</p>
+        </section>
+
+        <section>
+            <h2>Why Should Beginners Care?</h2>
+            <p>For perception stuff, like my focus, forward kinematics matters because if a robot tells me its joint angles are \(X\), \(Y\), and \(Z\), I need to know where the camera or sensor actually is in 3D space to interpret what it's seeing.</p>
+            <p>For control and motion planning, inverse kinematics is the bottleneck. You can't just tell a robot arm, "move to position \((2.5, 1.8)\)." The robot needs to calculate which joint angles achieve that. Every movement the robot makes starts with an IK problem.</p>
+            <p>In practice, real robots use both constantly. They plan a path through space, use forward kinematics to see whether that path is even possible, and then execute the path by calculating required angles with inverse kinematics for each point along the way.</p>
+        </section>
+
+        <section>
+            <h2>Common Beginner Mistakes</h2>
+            <p>Thinking there's always one answer. Nope. Sometimes there are infinite answers, sometimes none.</p>
+            <p>Assuming it's all closed-form math. Some of it is, but a lot is numerical guessing and optimization tricks.</p>
+            <p>Forgetting the difference between 2D and 3D. 2D is hard. 3D is really hard. The math explodes.</p>
+            <p>Not checking if a position is reachable. Before spending compute time on inverse kinematics, just check: "Is this point within the robot's workspace?"</p>
+        </section>
+
+        <section>
+            <h2>Where to Go From Here</h2>
+            <p>If you're interested in robotics, there are a few useful next steps.</p>
+            <p>Want to dive deeper into the math? Look up the Denavit-Hartenberg convention. It's a systematic way to represent robot arms that makes kinematics cleaner.</p>
+            <p>Want to see it in action? Play with a simulator such as ROS2 + Gazebo or even a free web simulator. Seeing the arm move as you change joint angles is way better than reading about it.</p>
+            <p>Want practical code? Libraries like <a href="https://github.com/Phylliade/ikpy" target="_blank" rel="noopener noreferrer">ikpy</a> for Python and ur_kinematics for UR robots do this for you, so you don't have to reinvent the wheel.</p>
+        </section>
+
+        <section>
+            <h2>Final Thought</h2>
+            <p>When I started learning this stuff, it felt abstract and intimidating. But once I realized it was just "tracing a chain forward" versus "finding the chain configuration that reaches a goal," it became intuitive. Your own arm does this perfectly every second. Robots just need a little math to catch up.</p>
+        </section>
+
+        <footer>
+            <p>2026 - Aymen Saad.</p>
+        </footer>
+    </div>
+</body>
+</html>

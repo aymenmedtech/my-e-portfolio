@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-nav">
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="biography.html">Bio</a></li>
+                    <li><a href="projects.html">Projects</a></li>
+                    <li><a href="learning.html">Learning</a></li>
+                </ul>
+            </nav>
+            <header>
+                <h1>Projects</h1>
+                <p>Selected engineering work in robotics, embedded systems, and telemetry.</p>
+            </header>
+        </div>
+
+        <section id="projects">
+            <h2>Featured Work</h2>
+
+            <div class="project">
+                <h3>Medtech ERA</h3>
+                <p>I designed the electrical cabinet for the MEDTECH ERA 6-axis robotic arm. My contribution was in creating detailed schematics in QElectroTech and a microcontroller support PCB in KiCad. I implemented organized wiring and active cooling to ensure safety, reliability, and maintainability. Challenges included missing ECAD symbols, component substitutions, and coordinating across mechanical and software teams. This project strengthened my skills in enclosure-level electrical engineering and documentation. Future improvements include modular controls and diagnostic sensing to make the system reusable for academic and industrial applications.</p>
+                <a class="load-more" href="medtech-era.html" target="_blank" rel="noopener noreferrer">Read more</a>
+            </div>
+
+            <div class="project">
+                <h3>Aerodata</h3>
+                <p>I developed the transmitter for a compact wireless telemetry system for UAVs, handling the complete firmware stack and PCB design from schematic to routed layout. The system collects multi-sensor data, performs onboard processing, and streams it reliably over RF in real time. I overcame challenges with noisy sensors, limited MCU resources, and tight PCB constraints, gaining hands-on experience in embedded firmware, sensor interfacing, RF communication, and PCB layout. Future improvements include a more powerful STM32 MCU, LoRa communication, and a compact integrated PCB to enhance performance, range, and UAV compatibility.</p>
+                <a class="load-more" href="aerodata.html" target="_blank" rel="noopener noreferrer">Read more</a>
+            </div>
+        </section>
+
+        <footer>
+            <p>2026 - Aymen Saad.</p>
+        </footer>
+    </div>
+</body>
+</html>
